@@ -3,6 +3,10 @@ package stohio.barnraisr;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.DatePicker;
 import android.widget.Button;
+
+import com.facebook.Profile;
+
 import java.util.Calendar;
 
 public class EventCreate extends AppCompatActivity {
@@ -91,6 +98,7 @@ public class EventCreate extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Event e = createEvent();
             }
         });
     }
@@ -176,6 +184,58 @@ public class EventCreate extends AppCompatActivity {
                 .append("-").append(day).append("-").append(year)
                 .append(" ").toString();
         datePicker.setText(date);
+    }
+
+    private Event createEvent(){
+        Long tsLong = System.currentTimeMillis();
+        String timestamp = tsLong.toString();
+        String longi = "";
+        String lati = "";
+        Location loc = null;
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        final LocationListener locationListener = new LocationListener() {
+
+            @Override
+            public void onLocationChanged(Location location) {
+
+            }
+
+            public void onStatusChanged(String s, int i, Bundle b){
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        try {
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,10,locationListener);
+            while(loc == null){
+                loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                System.out.println("Looking for location!");
+            }
+            if(loc != null){
+                double longitude = loc.getLongitude();
+                double latitude = loc.getLatitude();
+                longi = "" + longitude;
+                lati = "" + latitude;
+                System.out.println("NOGF " + longi);
+                System.out.println("nogf1 " + lati);
+            }
+        }catch(SecurityException e){
+            e.printStackTrace();
+        }
+
+
+        Event event = new Event(createTitle.getText().toString(), createDesc.getText().toString(), date, time, timestamp,longi,lati, Profile.getCurrentProfile().getId(), maxpart);
+        return event;
     }
 
 
