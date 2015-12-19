@@ -61,6 +61,7 @@ public class EventCreate extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showDatePickerDialog();
+                System.out.print("");
             }
         });
 
