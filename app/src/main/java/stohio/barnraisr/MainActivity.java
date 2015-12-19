@@ -2,11 +2,15 @@ package stohio.barnraisr;
 
         import android.content.Context;
         import android.content.Intent;
+        import android.content.pm.PackageInfo;
+        import android.content.pm.PackageManager;
+        import android.content.pm.Signature;
         import android.os.Bundle;
         import android.support.design.widget.FloatingActionButton;
         import android.support.design.widget.Snackbar;
         import android.support.v7.app.AppCompatActivity;
         import android.support.v7.widget.Toolbar;
+        import android.util.Base64;
         import android.util.Log;
         import android.view.View;
         import android.view.Menu;
@@ -26,6 +30,8 @@ package stohio.barnraisr;
 
         import org.json.JSONObject;
 
+        import java.security.MessageDigest;
+        import java.security.NoSuchAlgorithmException;
         import java.util.ArrayList;
         import java.util.Arrays;
         import java.util.List;
@@ -45,18 +51,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpFacebook();
         context = getApplicationContext();
 
-
-        setUpFacebook();
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
                 AccessToken.setCurrentAccessToken(newAccessToken);
             }
         };
-
-        printFB();
         loginManager.logInWithReadPermissions(this, permissionNeeds);
 
 
@@ -80,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
                 printFB();
                 list.post();
+                Intent myIntent = new Intent(MainActivity.this, EventCreate.class);
+                startActivity(myIntent);
+
             }
         });
     }
@@ -87,12 +93,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadData() {
         Log.e("DATA", "DATA LOADED");
-        list = new Event("My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
+        if (Profile.getCurrentProfile() != null) {
+            list = new Event("My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
+        }else{
+            list = new Event("My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "44.4563", "38.9283", "asfsafasfsa", 13);
+        }
         arrayList = new ArrayList<Event>();
         arrayList.add(list);
         lv = (ListView) findViewById(R.id.eventList);
-        EventArrayAdapter listAdapter = new EventArrayAdapter(context,arrayList);
-        if(listAdapter != null) {
+        EventArrayAdapter listAdapter = new EventArrayAdapter(context, arrayList);
+        if (listAdapter != null) {
 
             Log.e("TEST", "TRYING TO LOAD ADA5tPTER");
             lv.setAdapter(listAdapter);
@@ -196,10 +206,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCancel() {
 
-                        if(loggedIn = false) {
-                            finish();
-                            System.exit(0);
-                        }
+
 
                         Log.e("dd", "facebook login canceled");
 
@@ -210,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onError(FacebookException e) {
 
 
-                        Log.e("dd", "facebook login failed error");
+                        e.printStackTrace();
 
                     }
                 });
