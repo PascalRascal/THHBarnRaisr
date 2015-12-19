@@ -16,7 +16,11 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -151,11 +155,11 @@ public class Event {
 
             @Override
             protected String doInBackground(String... urls) {
-                Map<String, String> data = new HashMap<String, String>();
-                data.put("user", "A User");
-                data.put("state", "CA");
-                if (HttpRequest.post(POST_URL).form(data).created())
-                    System.out.println("User was created");
+                try{
+                    sendPOST();
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
                 return null;
 
 
@@ -196,10 +200,41 @@ public class Event {
         gp.execute();
         bm = gp.getBitmap();
         return bm;
+    }
+    private  void sendPOST() throws IOException {
+        URL obj = new URL(POST_URL);
+        String POST_PARAMS = this.toJSON().toString();
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("User-Agent", "i have no gf");
 
+        // For POST only - START
+        con.setDoOutput(true); // i think this is google sample Code
+        OutputStream os = con.getOutputStream();
+        os.write(POST_PARAMS.getBytes());
+        os.flush();
+        os.close();
+        // For POST only - END
 
+        int responseCode = con.getResponseCode();
+        System.out.println("POST Response Code :: " + responseCode);
 
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
 
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // print result
+            System.out.println(response.toString());
+        } else {
+            System.out.println("POST request not worked");
+        }
     }
 
 
