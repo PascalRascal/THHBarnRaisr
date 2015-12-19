@@ -29,9 +29,8 @@ import java.util.Map;
  * Created by Blaise on 12/18/2015.
  */
 public class Event {
-    private static final String GET_URL = "https://690e36e0.ngrok.io/bran";
 
-    private static final String POST_URL = "https://690e36e0.ngrok.io/bran";
+    private static final String POST_URL = "http://005studios.com";
 
 
 
