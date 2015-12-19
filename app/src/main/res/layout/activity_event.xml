@@ -93,16 +93,17 @@
         android:minLines="5" />
 
     <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        class="com.google.android.gms.maps.SupportMapFragment" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Check In Now"
         android:id="@+id/button"
-        android:longClickable="false"
-        android:layout_gravity="bottom" />
+        android:longClickable="false" />
 
 
 </LinearLayout>

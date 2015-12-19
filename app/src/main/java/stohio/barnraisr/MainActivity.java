@@ -13,8 +13,6 @@ package stohio.barnraisr;
         import android.widget.AdapterView;
         import android.widget.ListView;
 
-        import com.android.volley.RequestQueue;
-        import com.android.volley.toolbox.Volley;
         import com.facebook.*;
         import com.facebook.CallbackManager;
         import com.facebook.FacebookCallback;
@@ -88,10 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "lol", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 printFB();
-                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                queue.add(list.post());
-                Log.e("POSTING", list.post().toString());
-
+                list.post();
             }
         });
     }

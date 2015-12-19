@@ -3,4 +3,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
     <string name="facebook_app_id">856214304500142</string>
+    <string name="title_activity_event_create">EventCreate</string>
 </resources>
