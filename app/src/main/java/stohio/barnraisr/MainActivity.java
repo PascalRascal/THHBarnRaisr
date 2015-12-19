@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                System.out.println("Look at this SHITTO");
+                System.out.println("L@@K BUY NOW");
 
 
 
