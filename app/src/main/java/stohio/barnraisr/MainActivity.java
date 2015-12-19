@@ -1,44 +1,51 @@
 package stohio.barnraisr;
 
-
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.facebook.*;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
 
-import java.io.BufferedReader;
+
+
+
+
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    String hash = "I have no gf";
     private CallbackManager callbackManager;
     List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends");
-    private static final String POST_URL = "http://4bf85a29.ngrok.io";
-    private static final String POST_PARAMS = "Dude i have NO FUCKING GF";
-    private static final String USER_AGENT = "Android";
-
 
 
     @Override
@@ -53,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                System.out.println("L@@K BUY NOW");
+                System.out.println("Logged on Successfullyyylylylylylyl");
 
 
             }
@@ -75,8 +82,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+        event list = new event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", "09812098214");
+        ArrayList<event> arrayList = new ArrayList<event>();
+        arrayList.add(list);
         ListView lv = (ListView) findViewById(R.id.eventList);
-        System.out.println("I have no gf");
+        EventArrayAdapter listAdapter = new EventArrayAdapter(getApplicationContext(),arrayList);
+        lv.setAdapter(listAdapter);
+
 
 
         if (Fprofile != null) {
@@ -90,10 +104,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, hash, Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "lol", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-              new postEvent().execute("http://4bf85a29.ngrok.io");
-
             }
         });
     }
@@ -131,8 +143,5 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
     }
-
 }
-
-
 
