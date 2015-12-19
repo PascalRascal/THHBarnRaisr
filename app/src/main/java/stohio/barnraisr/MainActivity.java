@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        System.out.println("I have no gf");
+
        TextView Fname = (TextView) findViewById(R.id.profile_data);
 
         LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
