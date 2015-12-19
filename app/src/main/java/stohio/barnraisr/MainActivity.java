@@ -1,5 +1,6 @@
 package stohio.barnraisr;
 
+        import android.content.Context;
         import android.content.Intent;
         import android.os.Bundle;
         import android.support.design.widget.FloatingActionButton;
@@ -36,11 +37,16 @@ public class MainActivity extends AppCompatActivity {
     private LoginManager loginManager;
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
-
-
+    private boolean loggedIn = false;
+    ListView lv = null;
+    ArrayList<Event> arrayList = null;
+    Event list = null;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getApplicationContext();
+
 
         setUpFacebook();
         accessTokenTracker = new AccessTokenTracker() {
@@ -58,22 +64,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Event list = new Event("My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
-        final ArrayList<Event> arrayList = new ArrayList<Event>();
-        arrayList.add(list);
 
-        ListView lv = (ListView) findViewById(R.id.eventList);
-        EventArrayAdapter listAdapter = new EventArrayAdapter(getApplicationContext(),arrayList);
-        lv.setAdapter(listAdapter);
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, EventActivity.class);
-                intent.putExtra("Data", arrayList.get(position).toJSON().toString());
-                startActivity(intent);
-            }
-        });
+
 
 
 
@@ -87,6 +80,32 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
                 printFB();
                 list.post();
+            }
+        });
+    }
+
+
+    public void loadData() {
+        Log.e("DATA", "DATA LOADED");
+        list = new Event("My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
+        arrayList = new ArrayList<Event>();
+        arrayList.add(list);
+        lv = (ListView) findViewById(R.id.eventList);
+        EventArrayAdapter listAdapter = new EventArrayAdapter(context,arrayList);
+        if(listAdapter != null) {
+
+            Log.e("TEST", "TRYING TO LOAD ADAPTER");
+            lv.setAdapter(listAdapter);
+        }
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                if (arrayList != null) {
+                    intent.putExtra("Data", arrayList.get(position).toJSON().toString());
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -154,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(LoginResult loginResults) {
                         System.out.println("Logged in!");
-
+                        loggedIn = true;
+                        loadData();
                         GraphRequest request = GraphRequest.newMeRequest(
                                 loginResults.getAccessToken(),
                                 new GraphRequest.GraphJSONObjectCallback() {
@@ -175,6 +195,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancel() {
+
+                        if(loggedIn = false) {
+                            finish();
+                            System.exit(0);
+                        }
 
                         Log.e("dd", "facebook login canceled");
 
