@@ -30,11 +30,6 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestAsyncTask;
 
-
-
-
-
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -84,9 +79,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        event list = new event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", "09812098214");
+        event list = new event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", "09812098214", 13);
         ArrayList<event> arrayList = new ArrayList<event>();
         arrayList.add(list);
+
         ListView lv = (ListView) findViewById(R.id.eventList);
         EventArrayAdapter listAdapter = new EventArrayAdapter(getApplicationContext(),arrayList);
         lv.setAdapter(listAdapter);
