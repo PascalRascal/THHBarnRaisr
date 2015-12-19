@@ -4,8 +4,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
+import android.util.Log;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -143,26 +151,30 @@ public class Event {
         return jo;
     }
 
-    public void post(){
-        final String jsonString = this.toJSON().toString();
-        System.out.println(jsonString);
-        class postEvent extends AsyncTask<String, Long, String> {
+    public JsonObjectRequest post(){
 
-            @Override
-            protected String doInBackground(String... urls) {
-                Map<String, String> data = new HashMap<String, String>();
-                data.put("user", "A User");
-                data.put("state", "CA");
-                if (HttpRequest.post(POST_URL).form(data).created())
-                    System.out.println("User was created");
-                return null;
-
-
-            }
-        }
-        new postEvent().execute();
+        String string = this.toJSON().toString();
+        String string2 = "&myjson:"+string;
+       JsonObjectRequest request = new JsonObjectRequest(
+               Request.Method.POST, POST_URL, this.toJSON(), new Response.Listener<JSONObject>() {
+           @Override
+           public void onResponse(JSONObject jsonObject) {
+               Log.e("DATA", "RESPONSE: " + jsonObject.toString());
+           }
+       }, new Response.ErrorListener() {
+           @Override
+           public void onErrorResponse(VolleyError volleyError) {
+               Log.e("DATA", volleyError.toString());
+           }
+       });
+        Log.e("DATA", "JSON LIST: " + string2);
+        return request;
 
     }
+
+
+
+        final String jsonString = this.toJSON().toString();
 
     public Bitmap getPicture(){
         Bitmap bm = null;
