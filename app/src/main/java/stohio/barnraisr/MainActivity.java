@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Event list = new Event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
+        final Event list = new Event("My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
         final ArrayList<Event> arrayList = new ArrayList<Event>();
         arrayList.add(list);
 
