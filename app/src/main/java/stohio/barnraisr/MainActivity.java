@@ -3,6 +3,7 @@ package stohio.barnraisr;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,17 +30,22 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestAsyncTask;
 
+
+
+
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    String hash = "";
+    String hash = "I have no gf";
     private CallbackManager callbackManager;
-    List<String> permissionNeeds= Arrays.asList("user_photos", "email", "user_birthday", "user_friends");
-
-
+    List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends");
 
 
     @Override
@@ -57,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("L@@K BUY NOW");
 
 
-
             }
 
             @Override
@@ -73,9 +78,6 @@ public class MainActivity extends AppCompatActivity {
         Fprofile = Profile.getCurrentProfile();
 
 
-
-
-
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,19 +86,11 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("I have no gf");
 
 
-
-        if(Fprofile != null) {
+        if (Fprofile != null) {
             System.out.println(Fprofile.getFirstName());
-        }else{
+        } else {
             System.out.println("Profile is FUCKING null");
         }
-
-
-
-
-
-
-
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -130,15 +124,17 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
 
     }
+
     @Override
     protected void onPause() {
         super.onPause();
 
     }
-
 }
+
