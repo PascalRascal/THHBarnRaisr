@@ -1,6 +1,5 @@
 package stohio.barnraisr;
 
-import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,11 +18,11 @@ import java.util.ArrayList;
 /**
  * Created by csinko on 12/18/2015.
  */
-public class EventArrayAdapter extends ArrayAdapter<event> {
+public class EventArrayAdapter extends ArrayAdapter<Event> {
     private final Context context;
-    private final ArrayList<event> values;
+    private final ArrayList<Event> values;
 
-    public EventArrayAdapter(Context context, ArrayList<event> values) {
+    public EventArrayAdapter(Context context, ArrayList<Event> values) {
         super(context, R.layout.event_preview, values);
         this.values = values;
         this.context = context;
@@ -33,7 +32,7 @@ public class EventArrayAdapter extends ArrayAdapter<event> {
         LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View eventPreview = inflator.inflate(R.layout.event_preview, parent, false);
 
-        final event data = getItem(position);
+        final Event data = getItem(position);
 
         TextView title = (TextView) eventPreview.findViewById(R.id.title);
         TextView date = (TextView) eventPreview.findViewById(R.id.date);

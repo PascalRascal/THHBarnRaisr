@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final event list = new event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
-        final ArrayList<event> arrayList = new ArrayList<event>();
+        final Event list = new Event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
+        final ArrayList<Event> arrayList = new ArrayList<Event>();
         arrayList.add(list);
 
         ListView lv = (ListView) findViewById(R.id.eventList);
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent  = new Intent(MainActivity.this, EventActivity.class);
-                intent.putExtra("Data",arrayList.get(position).toJSON().toString());
+                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                intent.putExtra("Data", arrayList.get(position).toJSON().toString());
                 startActivity(intent);
             }
         });
