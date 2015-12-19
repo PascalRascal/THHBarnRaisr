@@ -10,10 +10,11 @@
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
 
-    <ListView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/eventList"
+        android:text="CHECK IT SHITBRAIN"
+        android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
