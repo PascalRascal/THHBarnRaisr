@@ -1,5 +1,6 @@
 package stohio.barnraisr;
 
+        import android.content.Intent;
         import android.content.pm.PackageInfo;
         import android.content.pm.PackageManager;
         import android.content.pm.Signature;
@@ -40,6 +41,7 @@ package stohio.barnraisr;
         import java.util.Arrays;
         import java.util.List;
 
+
 public class MainActivity extends AppCompatActivity {
     List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends", "user_likes");
     private CallbackManager callbackManager;
@@ -60,23 +62,22 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
-
         printFB();
+        loginManager.logInWithReadPermissions(this, permissionNeeds);
 
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final event list = new event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", "09812098214", 13);
+        final event list = new event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
         ArrayList<event> arrayList = new ArrayList<event>();
         arrayList.add(list);
 
         ListView lv = (ListView) findViewById(R.id.eventList);
         EventArrayAdapter listAdapter = new EventArrayAdapter(getApplicationContext(),arrayList);
         lv.setAdapter(listAdapter);
-        loginManager.logInWithReadPermissions(this, permissionNeeds);
+
 
 
 
@@ -127,6 +128,14 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
     public void setUpFacebook()
     {
         // First initialize the Facebook SDK
@@ -148,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResults) {
+                        System.out.println("Logged in!");
 
                         GraphRequest request = GraphRequest.newMeRequest(
                                 loginResults.getAccessToken(),
@@ -184,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
     public boolean isConnectedFacebook()
     {
 
@@ -201,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
     public void printFB(){
         if(isConnectedFacebook()) {
             System.out.println("Check it! " + AccessToken.getCurrentAccessToken().getToken());
+            System.out.println(Profile.getCurrentProfile().getId());
         }else{
             System.out.println("not connected! ;_;");
         }

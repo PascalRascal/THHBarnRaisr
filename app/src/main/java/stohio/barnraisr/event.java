@@ -1,15 +1,35 @@
 package stohio.barnraisr;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
+import com.android.volley.toolbox.ImageLoader;
+
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Blaise on 12/18/2015.
  */
 public class event {
+    private static final String GET_URL = "https://690e36e0.ngrok.io/bran";
+
+    private static final String POST_URL = "https://690e36e0.ngrok.io/bran";
+
+
+
     String eventTitle, eventDesc, eventDate, eventTime, eventTimestamp, eventLong, eventLat, eventHostID;
     int eventMaxPart;
     public event(){
@@ -125,17 +145,59 @@ public class event {
 
     public void post(){
         final String jsonString = this.toJSON().toString();
+        System.out.println(jsonString);
         class postEvent extends AsyncTask<String, Long, String> {
 
             @Override
             protected String doInBackground(String... urls) {
-                int response = HttpRequest.post("https://690e36e0.ngrok.io").send(jsonString).code();
-                String returnstring = "response code " + response;
-                return returnstring;
+                Map<String, String> data = new HashMap<String, String>();
+                data.put("user", "A User");
+                data.put("state", "CA");
+                if (HttpRequest.post(POST_URL).form(data).created())
+                    System.out.println("User was created");
+                return null;
+
 
             }
         }
         new postEvent().execute();
+
+    }
+
+    public Bitmap getPicture(){
+        Bitmap bm = null;
+
+         class getpic extends AsyncTask<Bitmap, Long, Bitmap>{
+             Bitmap bm = null;
+
+            @Override
+            protected Bitmap doInBackground(Bitmap... params) {
+
+                try {
+                    URL imageURL = new URL("https://graph.facebook.com/" + eventHostID + "/picture?type=small");
+                    bm = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                    return bm;
+                }catch(java.net.MalformedURLException e){
+                    e.printStackTrace();
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
+                return null;
+            }
+             public Bitmap getBitmap(){
+                 return bm;
+             }
+
+
+        }
+
+        getpic gp = new getpic();
+        gp.execute();
+        bm = gp.getBitmap();
+        return bm;
+
+
+
 
     }
 
