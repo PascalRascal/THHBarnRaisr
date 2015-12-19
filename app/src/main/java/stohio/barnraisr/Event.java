@@ -133,6 +133,7 @@ public class Event {
         JSONObject jo = new JSONObject();
 
         try {
+            jo.put("code", "0");
             jo.put("eventTitle", eventTitle);
             jo.put("eventDesc", eventDesc);
             jo.put("eventDate", eventDate);
@@ -203,7 +204,7 @@ public class Event {
     }
     private  void sendPOST() throws IOException {
         URL obj = new URL(POST_URL);
-        String POST_PARAMS = this.toJSON().toString();
+        String POST_PARAMS = "&myjson=" + this.toJSON().toString();
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", "i have no gf");
