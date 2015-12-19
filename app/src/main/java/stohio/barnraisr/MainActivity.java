@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         EventArrayAdapter listAdapter = new EventArrayAdapter(context,arrayList);
         if(listAdapter != null) {
 
-            Log.e("TEST", "TRYING TO LOAD ADAPTER");
+            Log.e("TEST", "TRYING TO LOAD ADA5tPTER");
             lv.setAdapter(listAdapter);
         }
 
