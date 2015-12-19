@@ -129,7 +129,7 @@ public class event {
 
             @Override
             protected String doInBackground(String... urls) {
-                int response = HttpRequest.get("https://690e36e0.ngrok.io").send(jsonString).code();
+                int response = HttpRequest.post("https://690e36e0.ngrok.io").send(jsonString).code();
                 String returnstring = "response code " + response;
                 return returnstring;
 

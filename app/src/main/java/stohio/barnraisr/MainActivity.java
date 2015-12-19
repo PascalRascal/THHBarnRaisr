@@ -1,99 +1,85 @@
 package stohio.barnraisr;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Base64;
-import android.util.Log;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.TextView;
+        import android.content.pm.PackageInfo;
+        import android.content.pm.PackageManager;
+        import android.content.pm.Signature;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.support.design.widget.FloatingActionButton;
+        import android.support.design.widget.Snackbar;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.util.Base64;
+        import android.util.Log;
+        import android.view.View;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.widget.ListView;
+        import android.widget.TextView;
 
-import com.facebook.*;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphRequestAsyncTask;
+        import com.facebook.*;
+        import com.facebook.CallbackManager;
+        import com.facebook.FacebookCallback;
+        import com.facebook.FacebookException;
+        import com.facebook.appevents.AppEventsLogger;
+        import com.facebook.FacebookSdk;
+        import com.facebook.login.LoginManager;
+        import com.facebook.login.LoginResult;
+        import com.facebook.login.widget.LoginButton;
+        import com.facebook.AccessToken;
+        import com.facebook.GraphRequest;
+        import com.facebook.GraphRequestAsyncTask;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+        import org.json.JSONObject;
+
+        import java.io.ByteArrayOutputStream;
+        import java.io.IOException;
+        import java.security.MessageDigest;
+        import java.security.NoSuchAlgorithmException;
+        import java.util.ArrayList;
+        import java.util.Arrays;
+        import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends", "user_likes");
     private CallbackManager callbackManager;
-    List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends");
+    private LoginManager loginManager;
+    private AccessToken accessToken;
+    private AccessTokenTracker accessTokenTracker;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-        Profile Fprofile;
 
-        LoginManager.getInstance().logInWithReadPermissions(this, permissionNeeds);
-
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        setUpFacebook();
+        accessTokenTracker = new AccessTokenTracker() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                System.out.println("Logged on Successfullyyylylylylylyl");
-
-
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
+                AccessToken.setCurrentAccessToken(newAccessToken);
             }
+        };
 
-            @Override
-            public void onCancel() {
 
-            }
 
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        });
-        Fprofile = Profile.getCurrentProfile();
+        printFB();
 
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
-        event list = new event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", "09812098214", 13);
+        final event list = new event("My First Event", "This is an Event", "2015/06/15", "6:00 PM", "123123", "44.4563", "38.9283", "09812098214", 13);
         ArrayList<event> arrayList = new ArrayList<event>();
         arrayList.add(list);
 
         ListView lv = (ListView) findViewById(R.id.eventList);
         EventArrayAdapter listAdapter = new EventArrayAdapter(getApplicationContext(),arrayList);
         lv.setAdapter(listAdapter);
+        loginManager.logInWithReadPermissions(this, permissionNeeds);
 
 
 
-        if (Fprofile != null) {
-            System.out.println(Fprofile.getFirstName());
-        } else {
-            System.out.println("Profile is FUCKING null");
-        }
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -102,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "lol", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                printFB();
+                list.post();
             }
         });
     }
@@ -139,5 +127,85 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
     }
+    public void setUpFacebook()
+    {
+        // First initialize the Facebook SDK
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+
+        // create the callback manager
+        callbackManager = CallbackManager.Factory.create();
+
+        // create the access token
+        accessToken = AccessToken.getCurrentAccessToken();
+
+        // create the login manager
+        loginManager = LoginManager.getInstance();
+
+
+
+        // create the callback for the login manager
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResults) {
+
+                        GraphRequest request = GraphRequest.newMeRequest(
+                                loginResults.getAccessToken(),
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(
+                                            JSONObject object,
+                                            GraphResponse response) {
+                                        // Application code
+                                        Log.v("LoginActivity", response.toString());
+                                    }
+                                });
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id,name,email,gender, birthday");
+                        request.setParameters(parameters);
+                        request.executeAsync();
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                        Log.e("dd", "facebook login canceled");
+
+                    }
+
+
+                    @Override
+                    public void onError(FacebookException e) {
+
+
+                        Log.e("dd", "facebook login failed error");
+
+                    }
+                });
+    }
+    public boolean isConnectedFacebook()
+    {
+
+        if (accessToken.getCurrentAccessToken() != null)
+        {
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    public void printFB(){
+        if(isConnectedFacebook()) {
+            System.out.println("Check it! " + AccessToken.getCurrentAccessToken().getToken());
+        }else{
+            System.out.println("not connected! ;_;");
+        }
+    }
+
+
 }
 
