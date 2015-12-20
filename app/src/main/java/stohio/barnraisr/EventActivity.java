@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -86,6 +87,12 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
                 Log.d("HANDSHAKE", eventID + " ------ " + hostID);
                 Event handshake = new Event("1", eventID, hostID);
                 handshake.post();
+                Toast toast = new Toast(getApplicationContext());
+                toast.setText("Checked into event");
+                toast.show();
+                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
             }
         });
 
