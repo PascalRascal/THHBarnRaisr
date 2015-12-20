@@ -1,5 +1,6 @@
 package stohio.barnraisr;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -87,11 +88,11 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
                 Log.d("HANDSHAKE", eventID + " ------ " + hostID);
                 Event handshake = new Event("1", eventID, hostID);
                 handshake.post();
-                Toast toast = new Toast(getApplicationContext());
-                toast.setText("Checked into event");
-                toast.show();
-                finish();
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Context context = getApplicationContext();
+                CharSequence text = "Checked in successfuly!";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
 
             }
         });
