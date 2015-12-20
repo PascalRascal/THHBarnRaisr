@@ -4,10 +4,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,13 +27,17 @@ import java.net.URL;
 /**
  * Created by csinko on 12/19/2015.
  */
-public class EventActivity extends AppCompatActivity {
+public class EventActivity extends FragmentActivity implements OnMapReadyCallback {
     TextView title,date,time,num,tot, desc;
     ImageView profile;
     Button button;
+    MapFragment mapFragment;
+    Event thisEvent;
+
 
     JSONObject jo;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
@@ -40,8 +53,8 @@ public class EventActivity extends AppCompatActivity {
         title = (TextView)findViewById(R.id.textView);
         date = (TextView)findViewById(R.id.textView2);
         time = (TextView)findViewById(R.id.textView3);
-        num = (TextView)findViewById(R.id.textView4);
-        tot = (TextView)findViewById(R.id.textView5);
+        num = (TextView)findViewById(R.id.currentNum);
+        tot = (TextView)findViewById(R.id.maxNum);
         desc = (TextView)findViewById(R.id.Desc);
         profile = (ImageView)findViewById(R.id.profile);
         button = (Button)findViewById(R.id.button);
@@ -52,6 +65,12 @@ public class EventActivity extends AppCompatActivity {
         num.setText("5");
         tot.setText(maxPart);
         desc.setText(thisEvent.getEventDesc());
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMap().setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mapFragment.getMapAsync(this);
+
+
 
         new AsyncTask<String, Void, Bitmap>() {
             @Override
@@ -77,6 +96,26 @@ public class EventActivity extends AppCompatActivity {
         }.execute();
 
 
+
+
+    }
+    @Override
+    public void onMapReady(GoogleMap map) {
+        String storedData = getIntent().getStringExtra("Data");
+        try{
+            JSONObject jo = new JSONObject(storedData);
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+        thisEvent = new Event(jo);
+        double lati = Double.parseDouble(thisEvent.getEventLong());
+        double longi = Double.parseDouble(thisEvent.getEventLat());
+        LatLng coords = new LatLng(lati,longi);
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(lati, longi))
+                .title(thisEvent.eventTitle));
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(coords, 15)));
 
 
     }
