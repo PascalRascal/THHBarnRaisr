@@ -190,7 +190,7 @@ public class Event {
         return message;
     }
 
-    public JSONObject stringToArray(String s) {
+    public JSONArray stringToArray(String s) {
         JSONObject jObject = null;
         try {
             jObject = new JSONObject(s);
@@ -199,8 +199,26 @@ public class Event {
             e.printStackTrace();
         }
         Log.e("JSON",jObject.toString());
+        JSONArray jArray = null;
 
-        return jObject;
+        try {
+            jArray = jObject.getJSONArray("locations");
+        } catch (org.json.JSONException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < jArray.length(); i++) {
+            JSONObject object = null;
+            try {
+                object = jArray.getJSONObject(i);
+            } catch (org.json.JSONException e) {
+                e.printStackTrace();
+            }
+            System.out.println(object.toString());
+        }
+
+
+        return jArray;
     }
 
     public Bitmap getPicture(){
