@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -39,20 +40,21 @@ public class Event {
     String eventCode, eventTitle, eventDesc, eventDate, eventTime, eventTimestamp, eventLong, eventLat, eventHostID;
     int eventMaxPart;
     String message;
+    JSONArray dataArray = null;
     public Event(){
         //Empty Constructor
     }
     public Event(JSONObject jo){
         try {
-            this.eventTitle = jo.getString("eventTitle");
-            this.eventDesc = jo.getString("eventDesc");
-            this.eventDate = jo.getString("eventDate");
-            this.eventTime = jo.getString("eventTime");
-            this.eventTimestamp = jo.getString("eventTimestamp");
-            this.eventLong = jo.getString("eventLong");
-            this.eventLat =  jo.getString("eventLat");
-            this.eventHostID = jo.getString("eventHostID");
-            this.eventMaxPart = jo.getInt("eventMaxPart");
+            this.eventTitle = jo.getString("event_title");
+            this.eventDesc = jo.getString("event_description");
+            this.eventDate = jo.getString("event_date");
+            this.eventTime = jo.getString("event_date");
+            this.eventTimestamp = jo.getString("event_date");
+            this.eventLong = jo.getString("event_long");
+            this.eventLat =  jo.getString("event_lat");
+            this.eventHostID = jo.getString("event_host");
+            this.eventMaxPart = 5;
         }catch(JSONException e){
             e.printStackTrace();
         }
@@ -75,6 +77,10 @@ public class Event {
 
     public Event(String eventCode) {
         this.eventCode = eventCode;
+    }
+
+    public JSONArray getDataArray() {
+        return dataArray;
     }
 
     public String getMessage() {
@@ -191,6 +197,7 @@ public class Event {
     }
 
     public JSONArray stringToArray(String s) {
+        Log.e("STRING TO CONVERT", s);
         JSONObject jObject = null;
         try {
             jObject = new JSONObject(s);
@@ -202,22 +209,17 @@ public class Event {
         JSONArray jArray = null;
 
         try {
-            jArray = jObject.getJSONArray("locations");
+            jArray = jObject.getJSONArray("events");
         } catch (org.json.JSONException e) {
             e.printStackTrace();
         }
 
         for (int i = 0; i < jArray.length(); i++) {
             JSONObject object = null;
-            try {
-                object = jArray.getJSONObject(i);
-            } catch (org.json.JSONException e) {
-                e.printStackTrace();
-            }
-            System.out.println(object.toString());
         }
 
-
+        dataArray = jArray;
+        Log.e("DATA ARRAY TEST", dataArray.toString());
         return jArray;
     }
 
@@ -290,7 +292,8 @@ public class Event {
         }
         message = msg;
         Log.d("MESSAGE REPLY", getMessage());
-        stringToArray(message);
+        if(eventCode.equals("3"))
+            stringToArray(msg);
         return msg ;
     }
 
