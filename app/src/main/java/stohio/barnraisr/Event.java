@@ -113,6 +113,8 @@ public class Event {
         return eventTitle;
     }
 
+    public int getEventMaxPart(){return eventMaxPart;}
+
     public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
     }
