@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
+import android.util.Log;
+
 import com.android.volley.toolbox.ImageLoader;
 
 import com.facebook.AccessToken;
@@ -34,8 +36,9 @@ public class Event {
 
 
 
-    String eventTitle, eventDesc, eventDate, eventTime, eventTimestamp, eventLong, eventLat, eventHostID;
+    String eventCode, eventTitle, eventDesc, eventDate, eventTime, eventTimestamp, eventLong, eventLat, eventHostID;
     int eventMaxPart;
+    String message;
     public Event(){
         //Empty Constructor
     }
@@ -57,7 +60,8 @@ public class Event {
 
     }
 
-    public Event(String eventTitle, String eventDesc, String eventDate, String eventTime, String eventTimestamp, String eventLong, String eventLat, String eventHostID, int eventMaxPart) {
+    public Event(String eventCode,String eventTitle, String eventDesc, String eventDate, String eventTime, String eventTimestamp, String eventLong, String eventLat, String eventHostID, int eventMaxPart) {
+        this.eventCode = eventCode;
         this.eventTitle = eventTitle;
         this.eventDesc = eventDesc;
         this.eventDate = eventDate;
@@ -67,6 +71,14 @@ public class Event {
         this.eventLat = eventLat;
         this.eventHostID = eventHostID;
         this.eventMaxPart = eventMaxPart;
+    }
+
+    public Event(String eventCode) {
+        this.eventCode = eventCode;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public String getEventDate() {
@@ -132,7 +144,7 @@ public class Event {
         JSONObject jo = new JSONObject();
 
         try {
-            jo.put("code", "0");
+            jo.put("code", eventCode);
             jo.put("eventTitle", eventTitle);
             jo.put("eventDesc", eventDesc);
             jo.put("eventDate", eventDate);
@@ -148,15 +160,22 @@ public class Event {
         return jo;
     }
 
-    public void post(){
-        final String jsonString = this.toJSON().toString();
+
+
+    public String post(){
+        String jsonString = "";
+        if (eventCode.equals("0"))
+            jsonString = this.toJSON().toString();
+        else if (eventCode.equals("3")) {
+            jsonString = "3";
+        }
         System.out.println(jsonString);
         class postEvent extends AsyncTask<String, Long, String> {
 
             @Override
             protected String doInBackground(String... urls) {
                 try{
-                    sendPOST();
+                   sendPOST();
                 }catch(IOException e){
                     e.printStackTrace();
                 }
@@ -166,7 +185,20 @@ public class Event {
             }
         }
         new postEvent().execute();
+        return message;
+    }
 
+    public JSONObject stringToArray(String s) {
+        JSONObject jObject = null;
+        try {
+            jObject = new JSONObject(s);
+        }
+        catch (org.json.JSONException e) {
+            e.printStackTrace();
+        }
+        Log.e("JSON",jObject.toString());
+
+        return jObject;
     }
 
     public Bitmap getPicture(){
@@ -201,7 +233,7 @@ public class Event {
         bm = gp.getBitmap();
         return bm;
     }
-    private  void sendPOST() throws IOException {
+    private  String sendPOST() throws IOException {
         URL obj = new URL(POST_URL);
         String POST_PARAMS = "&myjson=" + this.toJSON().toString();
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -217,6 +249,7 @@ public class Event {
         // For POST only - END
 
         int responseCode = con.getResponseCode();
+        String msg = "";
         System.out.println("POST Response Code :: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
@@ -231,10 +264,14 @@ public class Event {
             in.close();
 
             // print result
-            System.out.println(response.toString());
+            msg = response.toString();
         } else {
             System.out.println("POST request not worked");
         }
+        message = msg;
+        Log.d("MESSAGE REPLY", getMessage());
+        stringToArray(message);
+        return msg ;
     }
 
 

@@ -234,7 +234,7 @@ public class EventCreate extends AppCompatActivity {
         }
 
 
-        Event event = new Event(createTitle.getText().toString(), createDesc.getText().toString(), date, time, timestamp,longi,lati, Profile.getCurrentProfile().getId(), maxpart);
+        Event event = new Event("0",createTitle.getText().toString(), createDesc.getText().toString(), date, time, timestamp,longi,lati, Profile.getCurrentProfile().getId(), maxpart);
         return event;
     }
 
