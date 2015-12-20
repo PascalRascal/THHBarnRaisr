@@ -41,6 +41,7 @@ public class Event {
     int eventMaxPart;
     String message;
     JSONArray dataArray = null;
+    boolean isRefereshing = true;
     public Event(){
         //Empty Constructor
     }
@@ -78,6 +79,10 @@ public class Event {
 
     public Event(String eventCode) {
         this.eventCode = eventCode;
+    }
+
+    public boolean isRefreshing() {
+        return isRefereshing;
     }
 
     public JSONArray getDataArray() {
@@ -172,6 +177,7 @@ public class Event {
 
 
     public String post(){
+        isRefereshing = true;
         String jsonString = "";
         if (eventCode.equals("0"))
             jsonString = this.toJSON().toString();
@@ -216,11 +222,11 @@ public class Event {
         }
 
         for (int i = 0; i < jArray.length(); i++) {
-            JSONObject object = null;
         }
 
         dataArray = jArray;
         Log.e("DATA ARRAY TEST", dataArray.toString());
+        isRefereshing = false;
         return jArray;
     }
 

@@ -13,6 +13,7 @@ package stohio.barnraisr;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
         import android.widget.ListView;
 
         import com.facebook.*;
@@ -43,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean loggedIn = false;
     private SwipeRefreshLayout swipeContainer;
     ListView lv = null;
-    ArrayList<Event> arrayList = null;
     Context context;
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,10 +75,13 @@ public class MainActivity extends AppCompatActivity {
             public void onRefresh() {
                 loadData();
 
-
+                if(swipeContainer.isRefreshing())
+                    swipeContainer.setRefreshing(false);
             }
         });
+        swipeContainer.setColorSchemeColors(android.R.color.black, android.R.color.holo_red_light, android.R.color.black, android.R.color.holo_red_light);
 
+        //mDrawerList = (ListView)findViewById(R.id.navList);
 
 
 
@@ -94,21 +99,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     public void loadData() {
         Event list;
+        final ArrayList<Event> arrayList;
         arrayList = new ArrayList<Event>();
 
         Log.e("DATA", "DATA LOADED");
         list = new Event("3");
         list.post();
 
-        try {
-            Thread.sleep(500);
+        while(list.isRefereshing) {
+
+            try {
+                Thread.sleep(100);
+            } catch (java.lang.InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        catch(java.lang.InterruptedException e) {
-            e.printStackTrace();
-        }
-           JSONArray dataArray = list.getDataArray();
+           JSONArray dataArray;
+        dataArray = list.getDataArray();
             //Log.e("ARRAYJSON", dataArray.toString());
 
         for(int i = 0; i < dataArray.length(); i++) {
@@ -134,11 +144,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, EventActivity.class);
-                if (arrayList != null) {
-                    Log.d("HELP DATA", arrayList.get(position).toJSON().toString());
-                    intent.putExtra("Data", arrayList.get(position).toJSON().toString());
+                 final ArrayList<Event> arrayData = arrayList;
+                    Log.d("HELP DATA", arrayData.get(position).toJSON().toString());
+                    intent.putExtra("Data", arrayData.get(position).toJSON().toString());
                     startActivity(intent);
-                }
+
             }
         });
     }
