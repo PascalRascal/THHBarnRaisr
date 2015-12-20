@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadData() {
         Log.e("DATA", "DATA LOADED");
-        list = new Event("My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
+        list = new Event("0","My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "44.4563", "38.9283", Profile.getCurrentProfile().getId(), 13);
         arrayList = new ArrayList<Event>();
         arrayList.add(list);
         lv = (ListView) findViewById(R.id.eventList);
