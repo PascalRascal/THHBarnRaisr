@@ -39,6 +39,7 @@ package stohio.barnraisr;
 
 public class MainActivity extends AppCompatActivity {
     List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends", "user_likes");
+
     private CallbackManager callbackManager;
     private LoginManager loginManager;
     private AccessToken accessToken;
@@ -48,11 +49,12 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Event> arrayList = null;
     Event list = null;
     Context context;
+    int i = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        callbackManager = CallbackManager.Factory.create();
         setUpFacebook();
-        context = getApplicationContext();
 
         accessTokenTracker = new AccessTokenTracker() {
             @Override
@@ -60,19 +62,22 @@ public class MainActivity extends AppCompatActivity {
                 AccessToken.setCurrentAccessToken(newAccessToken);
             }
         };
-        loginManager.logInWithReadPermissions(this, permissionNeeds);
 
+        System.out.println("We tried logging in!");
+        if(Profile.getCurrentProfile() == null){
+            System.out.println("The profile we have stored is null");
+        }else{
+            System.out.println(Profile.getCurrentProfile().getFirstName());
+        }
+
+        loginManager.logInWithReadPermissions(this, permissionNeeds);
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        lv = (ListView)findViewById(R.id.eventList);
 
-
-
-
-
-
-
+        loadData();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -100,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
         }
         arrayList = new ArrayList<Event>();
         arrayList.add(list);
-        lv = (ListView) findViewById(R.id.eventList);
-        EventArrayAdapter listAdapter = new EventArrayAdapter(context, arrayList);
+        EventArrayAdapter listAdapter = new EventArrayAdapter(getApplicationContext(), arrayList);
         if (listAdapter != null) {
 
             Log.e("TEST", "TRYING TO LOAD ADA5tPTER");
@@ -156,18 +160,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, data);
+            callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public void setUpFacebook()
     {
         // First initialize the Facebook SDK
         FacebookSdk.sdkInitialize(this.getApplicationContext());
-
-        // create the callback manager
-        callbackManager = CallbackManager.Factory.create();
+        System.out.println("Facebook set up!");
 
         // create the access token
         accessToken = AccessToken.getCurrentAccessToken();
@@ -184,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(LoginResult loginResults) {
                         System.out.println("Logged in!");
                         loggedIn = true;
-                        loadData();
                         GraphRequest request = GraphRequest.newMeRequest(
                                 loginResults.getAccessToken(),
                                 new GraphRequest.GraphJSONObjectCallback() {
@@ -220,7 +220,9 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
 
                     }
+
                 });
+        System.out.println("Facebook is all set up!");
     }
 
 
