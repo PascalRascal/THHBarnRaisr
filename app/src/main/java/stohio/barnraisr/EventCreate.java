@@ -98,6 +98,8 @@ public class EventCreate extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                  {
+                     Snackbar.make(view, "Event Posted!", Snackbar.LENGTH_LONG)
+                             .setAction("Action", null).show();
 
                 }
                 createEvent();
