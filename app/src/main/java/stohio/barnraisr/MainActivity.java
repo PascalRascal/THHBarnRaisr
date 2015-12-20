@@ -5,7 +5,6 @@ package stohio.barnraisr;
         import android.os.Bundle;
         import android.support.design.widget.FloatingActionButton;
         import android.support.design.widget.Snackbar;
-        import android.support.v4.widget.SwipeRefreshLayout;
         import android.support.v7.app.AppCompatActivity;
         import android.support.v7.widget.Toolbar;
         import android.util.Log;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
     private boolean loggedIn = false;
-    private SwipeRefreshLayout swipeContainer;
     ListView lv = null;
     ArrayList<Event> arrayList = null;
     Event list = null;
@@ -48,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
+
 
         setUpFacebook();
         accessTokenTracker = new AccessTokenTracker() {
@@ -65,17 +64,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Event data = new Event("3");
-                data.post();
-
-
-            }
-        });
 
 
 
@@ -207,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCancel() {
 
-                        if(loggedIn == false) {
+                        if(loggedIn = false) {
                             finish();
                             System.exit(0);
                         }
