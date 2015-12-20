@@ -45,6 +45,7 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         setContentView(R.layout.activity_event);
         String storedData = getIntent().getStringExtra("Data");
         try{
@@ -117,6 +118,13 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
 
 
     }
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+    }
+
     @Override
     public void onMapReady(GoogleMap map) {
         double longi = -81.9329870;

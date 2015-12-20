@@ -235,7 +235,7 @@ public class Event {
             case "6":   jsonString = "6";
                 break;
         }
-        System.out.println(jsonString);
+        Log.d("POSTING",jsonString);
         class postEvent extends AsyncTask<String, Long, String> {
 
             @Override
@@ -330,7 +330,7 @@ public class Event {
 
         int responseCode = con.getResponseCode();
         String msg = "";
-        System.out.println("POST Response Code :: " + responseCode);
+        Log.d("POSTING"," Response Code :: " + responseCode + " :: Post Code " + eventCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
             BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -349,7 +349,7 @@ public class Event {
             System.out.println("POST request not worked");
         }
         message = msg;
-        Log.d("MESSAGE REPLY", getMessage());
+        Log.d("POSTING", msg);
         if(eventCode.equals("3"))
             stringToArray(msg);
         return msg ;

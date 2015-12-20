@@ -248,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(LoginResult loginResults) {
                         System.out.println("Logged in!");
                         Event registration = new Event("2", Profile.getCurrentProfile().getId());
+                        Log.d("facebookload", Profile.getCurrentProfile().getId());
                         registration.post();
                         loggedIn = true;
                         loadData(3);
@@ -310,7 +311,6 @@ public class MainActivity extends AppCompatActivity {
     public void printFB(){
         if(isConnectedFacebook()) {
             System.out.println("Check it! " + AccessToken.getCurrentAccessToken().getToken());
-            System.out.println(Profile.getCurrentProfile().getId());
         }else{
             System.out.println("not connected! ;_;");
         }
