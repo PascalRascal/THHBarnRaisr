@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
     Button button;
     MapFragment mapFragment;
     Event thisEvent;
+    String hostID, eventID;
 
 
     JSONObject jo;
@@ -50,7 +52,8 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
         Event thisEvent = new Event(jo);
-        final String hostID = thisEvent.getEventHostID();
+        hostID = thisEvent.getEventHostID();
+        eventID = thisEvent.getEventID();
         System.out.println("dota 2 " + thisEvent.toJSON().toString());
         String maxPart = "" + thisEvent.getEventMaxPart();
 
@@ -73,6 +76,15 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMap().setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mapFragment.getMapAsync(this);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("HANDSHAKE", eventID + " ------ " + hostID);
+                Event handshake = new Event("1", eventID, hostID);
+                handshake.post();
+            }
+        });
 
 
 

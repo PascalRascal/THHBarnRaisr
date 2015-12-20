@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
-    @Override
+    private int dataCode = 3;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
@@ -73,18 +73,34 @@ public class MainActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData();
+                loadData(dataCode);
 
                 if(swipeContainer.isRefreshing())
                     swipeContainer.setRefreshing(false);
             }
         });
-        swipeContainer.setColorSchemeColors(android.R.color.black, android.R.color.holo_red_light, android.R.color.black, android.R.color.holo_red_light);
 
-        //mDrawerList = (ListView)findViewById(R.id.navList);
-
+        mDrawerList = (ListView)findViewById(R.id.navList);
 
 
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        //My Events
+                        dataCode = 4;
+                        break;
+                    case 1:
+                        dataCode = 5;
+                        break;
+                    case 2:
+                        dataCode = 6;
+                        break;
+                }
+                loadData(dataCode);
+            }
+        });
 
 
 
@@ -96,17 +112,31 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    addDrawerItems();
+
     }
 
 
 
-    public void loadData() {
+
+    public void addDrawerItems() {
+        String[] osArray = {"My Events", "Participating", "Completed"};
+        mAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, osArray);
+        mDrawerList.setAdapter(mAdapter);
+    }
+
+
+
+
+
+    public void loadData(int code) {
         Event list;
         final ArrayList<Event> arrayList;
         arrayList = new ArrayList<Event>();
 
         Log.e("DATA", "DATA LOADED");
-        list = new Event("3");
+        list = new Event(Integer.toString(code));
         list.post();
 
         while(list.isRefereshing) {
@@ -187,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
+        @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -217,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(LoginResult loginResults) {
                         System.out.println("Logged in!");
                         loggedIn = true;
-                        loadData();
+                        loadData(3);
                         GraphRequest request = GraphRequest.newMeRequest(
                                 loginResults.getAccessToken(),
                                 new GraphRequest.GraphJSONObjectCallback() {

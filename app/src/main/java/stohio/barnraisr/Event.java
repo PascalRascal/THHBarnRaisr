@@ -37,7 +37,7 @@ public class Event {
 
 
 
-    String eventCode, eventTitle, eventDesc, eventDate, eventTime, eventTimestamp, eventLong, eventLat, eventHostID;
+    String eventCode, eventTitle, eventDesc, eventDate, eventTime, eventTimestamp, eventLong, eventLat, eventHostID, eventID;
     int eventMaxPart;
     String message;
     JSONArray dataArray = null;
@@ -47,6 +47,7 @@ public class Event {
     }
     public Event(JSONObject jo){
         try {
+
             this.eventTitle = jo.getString("eventTitle");
             this.eventDesc = jo.getString("eventDesc");
             this.eventDate = jo.getString("eventDate");
@@ -54,9 +55,12 @@ public class Event {
             this.eventTimestamp = jo.getString("eventDate");
             this.eventLong = jo.getString("eventLong");
             this.eventLat =  jo.getString("eventLat");
-            Log.d("LMAO", jo.getString("eventLong") + ", " + jo.getString("eventLat"));
+            //Log.d("LMAO", jo.getString("eventLong") + ", " + jo.getString("eventLat"));
             this.eventHostID = jo.getString("eventHostID");
             this.eventMaxPart = jo.getInt("eventMaxPart");
+            this.eventID = jo.getString("PK_ID");
+            Log.d("EVENTID", eventID);
+
         }catch(JSONException e){
             e.printStackTrace();
         }
@@ -81,8 +85,18 @@ public class Event {
         this.eventCode = eventCode;
     }
 
+    public Event(String eventCode, String eventID, String eventHostID) {
+        this.eventCode = eventCode;
+        this.eventID = eventID;
+        this.eventHostID = eventHostID;
+    }
+
     public boolean isRefreshing() {
         return isRefereshing;
+    }
+
+    public String getEventID() {
+        return eventID;
     }
 
     public JSONArray getDataArray() {
@@ -159,6 +173,7 @@ public class Event {
 
         try {
             jo.put("code", eventCode);
+            jo.put("PK_ID", eventID);
             jo.put("eventTitle", eventTitle);
             jo.put("eventDesc", eventDesc);
             jo.put("eventDate", eventDate);
@@ -168,6 +183,7 @@ public class Event {
             jo.put("eventLat", eventLat);
             jo.put("eventHostID", eventHostID);
             jo.put("eventMaxPart", eventMaxPart);
+
         }catch(JSONException e){
             e.printStackTrace();
         }
@@ -183,6 +199,20 @@ public class Event {
             jsonString = this.toJSON().toString();
         else if (eventCode.equals("3")) {
             jsonString = "3";
+        }
+
+        else if (eventCode.equals("1")) {
+            JSONObject handshake = new JSONObject();
+            try {
+                handshake.put("code", eventCode);
+                handshake.put("eventID", eventID);
+                handshake.put("eventHostID", eventHostID);
+            }
+            catch (org.json.JSONException e) {
+                e.printStackTrace();
+            }
+
+            jsonString = handshake.toString();
         }
         System.out.println(jsonString);
         class postEvent extends AsyncTask<String, Long, String> {
