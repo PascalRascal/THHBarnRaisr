@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -103,11 +104,12 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap map) {
         String storedData = getIntent().getStringExtra("Data");
         try{
-            JSONObject jo = new JSONObject(storedData);
+            jo = new JSONObject(storedData);
         }catch(JSONException e){
             e.printStackTrace();
         }
         thisEvent = new Event(jo);
+        Log.d("MAP", thisEvent.getEventLat() + ", " + thisEvent.getEventLong());
         double lati = Double.parseDouble(thisEvent.getEventLong());
         double longi = Double.parseDouble(thisEvent.getEventLat());
         LatLng coords = new LatLng(lati,longi);

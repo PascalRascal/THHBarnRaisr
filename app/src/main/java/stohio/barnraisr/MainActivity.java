@@ -5,6 +5,7 @@ package stohio.barnraisr;
         import android.os.Bundle;
         import android.support.design.widget.FloatingActionButton;
         import android.support.design.widget.Snackbar;
+        import android.support.v4.widget.SwipeRefreshLayout;
         import android.support.v7.app.AppCompatActivity;
         import android.support.v7.widget.Toolbar;
         import android.util.Log;
@@ -17,6 +18,7 @@ package stohio.barnraisr;
         import com.facebook.*;
         import com.facebook.CallbackManager;
         import com.facebook.FacebookCallback;
+        import com.facebook.FacebookCallback;
         import com.facebook.FacebookException;
         import com.facebook.FacebookSdk;
         import com.facebook.login.LoginManager;
@@ -24,6 +26,7 @@ package stohio.barnraisr;
         import com.facebook.AccessToken;
         import com.facebook.GraphRequest;
 
+        import org.json.JSONArray;
         import org.json.JSONObject;
 
         import java.util.ArrayList;
@@ -38,15 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private AccessToken accessToken;
     private AccessTokenTracker accessTokenTracker;
     private boolean loggedIn = false;
+    private SwipeRefreshLayout swipeContainer;
     ListView lv = null;
     ArrayList<Event> arrayList = null;
-    Event list = null;
     Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
-
 
         setUpFacebook();
         accessTokenTracker = new AccessTokenTracker() {
@@ -64,7 +66,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+
+
+            }
+        });
 
 
 
@@ -76,20 +87,41 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "lol", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                printFB();
-                list.post();
+                Intent intent = new Intent(context, EventCreate.class);
+                startActivity(intent);
             }
         });
     }
 
 
     public void loadData() {
-        Log.e("DATA", "DATA LOADED");
-        list = new Event("0","My First Event", "This is an Event", "2015-06-15", "6:00 PM", "123123", "41.449506", "-81.911616", Profile.getCurrentProfile().getId(), 13);
+        Event list;
         arrayList = new ArrayList<Event>();
-        arrayList.add(list);
+
+        Log.e("DATA", "DATA LOADED");
+        list = new Event("3");
+        list.post();
+
+        try {
+            Thread.sleep(500);
+        }
+        catch(java.lang.InterruptedException e) {
+            e.printStackTrace();
+        }
+           JSONArray dataArray = list.getDataArray();
+            Log.e("ARRAYJSON", dataArray.toString());
+
+        for(int i = 0; i < dataArray.length(); i++) {
+            JSONObject object = null;
+            try {
+                object = dataArray.getJSONObject(i);
+            } catch (org.json.JSONException e) {
+                e.printStackTrace();
+            }
+            System.out.println(object.toString());
+             arrayList.add(new Event(object));
+        }
+
         lv = (ListView) findViewById(R.id.eventList);
         EventArrayAdapter listAdapter = new EventArrayAdapter(context,arrayList);
         if(listAdapter != null) {
@@ -103,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, EventActivity.class);
                 if (arrayList != null) {
+                    Log.d("HELP DATA", arrayList.get(position).toJSON().toString());
                     intent.putExtra("Data", arrayList.get(position).toJSON().toString());
                     startActivity(intent);
                 }
@@ -196,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCancel() {
 
-                        if(loggedIn = false) {
+                        if(loggedIn == false) {
                             finish();
                             System.exit(0);
                         }

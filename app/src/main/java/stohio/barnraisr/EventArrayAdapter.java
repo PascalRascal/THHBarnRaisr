@@ -32,12 +32,12 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View eventPreview = inflator.inflate(R.layout.event_preview, parent, false);
 
-        final Event data = values.get(position);
+        final Event data = getItem(position);
 
-        final TextView title = (TextView) eventPreview.findViewById(R.id.title);
-        final TextView desc = (TextView) eventPreview.findViewById(R.id.description);
+        TextView title = (TextView) eventPreview.findViewById(R.id.title);
         final ImageView profile = (ImageView) eventPreview.findViewById(R.id.thumbnail);
 
+        title.setText(data.getEventTitle());
 
         new AsyncTask<String, Void, Bitmap>() {
             @Override
@@ -57,16 +57,10 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
             @Override
             protected void onPostExecute(Bitmap bitmap) {
                 super.onPostExecute(bitmap);
-                title.setText(data.getEventTitle());
-                desc.setText(data.getEventDesc());
 
                 profile.setImageBitmap(bitmap);
             }
         }.execute();
-
-        title.setText(data.getEventTitle());
-        desc.setText(data.getEventDesc());
-        System.out.println("OOGA BOOGA " + title.getText().toString());
 
 
         return eventPreview;

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -96,9 +97,8 @@ public class EventCreate extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Event e = createEvent();
+                createEvent();
+                finish();
             }
         });
     }
@@ -224,8 +224,8 @@ public class EventCreate extends AppCompatActivity {
             if(loc != null){
                 double longitude = loc.getLongitude();
                 double latitude = loc.getLatitude();
-                longi = "" + longitude;
-                lati = "" + latitude;
+                longi = "41.4685770";// + longitude;
+                lati = "-81.9329870";// + latitude;
                 System.out.println("NOGF " + longi);
                 System.out.println("nogf1 " + lati);
             }
@@ -235,6 +235,7 @@ public class EventCreate extends AppCompatActivity {
 
 
         Event event = new Event("0",createTitle.getText().toString(), createDesc.getText().toString(), date, time, timestamp,longi,lati, Profile.getCurrentProfile().getId(), maxpart);
+        event.post();
         return event;
     }
 

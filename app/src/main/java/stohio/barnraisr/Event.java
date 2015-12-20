@@ -53,6 +53,7 @@ public class Event {
             this.eventTimestamp = jo.getString("event_date");
             this.eventLong = jo.getString("event_long");
             this.eventLat =  jo.getString("event_lat");
+            Log.d("LMAO", jo.getString("event_long") + ", " + jo.getString("event_lat"));
             this.eventHostID = jo.getString("event_host");
             this.eventMaxPart = 5;
         }catch(JSONException e){
