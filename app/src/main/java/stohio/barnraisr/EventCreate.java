@@ -217,15 +217,16 @@ public class EventCreate extends AppCompatActivity {
 
         try {
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,10,locationListener);
-            while(loc == null){
-                loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                System.out.println("Looking for location!");
+            if(loc ==null)
+            {
+                longi = "" + -81.9329870;
+                lati =  "" + 41.4685770;
             }
             if(loc != null){
                 double longitude = loc.getLongitude();
                 double latitude = loc.getLatitude();
-                longi = "41.4685770";// + longitude;
-                lati = "-81.9329870";// + latitude;
+                longi = "" + longitude;
+                lati = "" + latitude;
                 System.out.println("NOGF " + longi);
                 System.out.println("nogf1 " + lati);
             }

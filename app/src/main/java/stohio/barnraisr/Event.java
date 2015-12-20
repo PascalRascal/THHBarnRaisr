@@ -46,16 +46,16 @@ public class Event {
     }
     public Event(JSONObject jo){
         try {
-            this.eventTitle = jo.getString("event_title");
-            this.eventDesc = jo.getString("event_description");
-            this.eventDate = jo.getString("event_date");
-            this.eventTime = jo.getString("event_date");
-            this.eventTimestamp = jo.getString("event_date");
-            this.eventLong = jo.getString("event_long");
-            this.eventLat =  jo.getString("event_lat");
-            Log.d("LMAO", jo.getString("event_long") + ", " + jo.getString("event_lat"));
-            this.eventHostID = jo.getString("event_host");
-            this.eventMaxPart = 5;
+            this.eventTitle = jo.getString("eventTitle");
+            this.eventDesc = jo.getString("eventDesc");
+            this.eventDate = jo.getString("eventDate");
+            this.eventTime = jo.getString("eventDate");
+            this.eventTimestamp = jo.getString("eventDate");
+            this.eventLong = jo.getString("eventLong");
+            this.eventLat =  jo.getString("eventLat");
+            Log.d("LMAO", jo.getString("eventLong") + ", " + jo.getString("eventLat"));
+            this.eventHostID = jo.getString("eventHostID");
+            this.eventMaxPart = jo.getInt("eventMaxPart");
         }catch(JSONException e){
             e.printStackTrace();
         }

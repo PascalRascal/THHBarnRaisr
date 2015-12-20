@@ -45,10 +45,13 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
         String storedData = getIntent().getStringExtra("Data");
         try{
             jo = new JSONObject(storedData);
+            System.out.println("Blaise has no gf " + jo.toString());
         }catch(JSONException e){
             e.printStackTrace();
         }
-        final Event thisEvent = new Event(jo);
+        Event thisEvent = new Event(jo);
+        final String hostID = thisEvent.getEventHostID();
+        System.out.println("dota 2 " + thisEvent.toJSON().toString());
         String maxPart = "" + thisEvent.getEventMaxPart();
 
         title = (TextView)findViewById(R.id.textView);
@@ -77,7 +80,7 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
             @Override
             protected Bitmap doInBackground(String... params) {
                 try {
-                    URL imageURL = new URL("https://graph.facebook.com/" + thisEvent.getEventHostID() + "/picture?type=large");
+                    URL imageURL = new URL("https://graph.facebook.com/" + hostID + "/picture?type=large");
                     Bitmap bm = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
                     return bm;
                 }catch(java.net.MalformedURLException e){
@@ -102,6 +105,8 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
     }
     @Override
     public void onMapReady(GoogleMap map) {
+        double longi = -81.9329870;
+        double lati = 41.4685770;
         String storedData = getIntent().getStringExtra("Data");
         try{
             jo = new JSONObject(storedData);
@@ -110,8 +115,7 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
         }
         thisEvent = new Event(jo);
         Log.d("MAP", thisEvent.getEventLat() + ", " + thisEvent.getEventLong());
-        double lati = Double.parseDouble(thisEvent.getEventLong());
-        double longi = Double.parseDouble(thisEvent.getEventLat());
+        System.out.println("no gf " + thisEvent.getEventLong());
         LatLng coords = new LatLng(lati,longi);
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(lati, longi))

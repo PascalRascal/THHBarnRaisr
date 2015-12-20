@@ -35,9 +35,11 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         final Event data = getItem(position);
 
         TextView title = (TextView) eventPreview.findViewById(R.id.title);
+        TextView desc = (TextView) eventPreview.findViewById(R.id.description);
         final ImageView profile = (ImageView) eventPreview.findViewById(R.id.thumbnail);
 
         title.setText(data.getEventTitle());
+        desc.setText(data.getEventDesc());
 
         new AsyncTask<String, Void, Bitmap>() {
             @Override

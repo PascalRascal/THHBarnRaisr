@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
            JSONArray dataArray = list.getDataArray();
-            Log.e("ARRAYJSON", dataArray.toString());
+            //Log.e("ARRAYJSON", dataArray.toString());
 
         for(int i = 0; i < dataArray.length(); i++) {
             JSONObject object = null;
