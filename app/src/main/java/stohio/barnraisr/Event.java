@@ -85,6 +85,11 @@ public class Event {
         this.eventCode = eventCode;
     }
 
+    public Event(String eventCode, String eventHostID) {
+        this.eventCode = eventCode;
+        this.eventHostID = eventHostID;
+    }
+
     public Event(String eventCode, String eventID, String eventHostID) {
         this.eventCode = eventCode;
         this.eventID = eventID;
@@ -195,24 +200,40 @@ public class Event {
     public String post(){
         isRefereshing = true;
         String jsonString = "";
-        if (eventCode.equals("0"))
-            jsonString = this.toJSON().toString();
-        else if (eventCode.equals("3")) {
-            jsonString = "3";
-        }
+        switch (eventCode) {
+            case "0":   jsonString = this.toJSON().toString();
+                break;
+            case "1":
+                JSONObject handshake = new JSONObject();
+                try {
+                    handshake.put("code", eventCode);
+                    handshake.put("eventID", eventID);
+                    handshake.put("eventHostID", eventHostID);
+                }
+                catch (org.json.JSONException e) {
+                    e.printStackTrace();
+                }
 
-        else if (eventCode.equals("1")) {
-            JSONObject handshake = new JSONObject();
-            try {
-                handshake.put("code", eventCode);
-                handshake.put("eventID", eventID);
-                handshake.put("eventHostID", eventHostID);
-            }
-            catch (org.json.JSONException e) {
-                e.printStackTrace();
-            }
-
-            jsonString = handshake.toString();
+                jsonString = handshake.toString();
+                break;
+            case "2":
+                JSONObject registration = new JSONObject();
+                try {
+                    registration.put("code", eventCode);
+                    registration.put("eventHostID", eventHostID);
+                } catch(JSONException e) {
+                    e.printStackTrace();
+                }
+                jsonString = registration.toString();
+                break;
+            case "3":   jsonString = "3";
+                break;
+            case "4":   jsonString = "4";
+                break;
+            case "5":   jsonString = "5";
+                break;
+            case "6":   jsonString = "6";
+                break;
         }
         System.out.println(jsonString);
         class postEvent extends AsyncTask<String, Long, String> {

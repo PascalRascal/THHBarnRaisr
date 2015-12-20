@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.facebook.Profile;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,7 +54,7 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
         Event thisEvent = new Event(jo);
-        hostID = thisEvent.getEventHostID();
+        hostID = Profile.getCurrentProfile().getId();
         eventID = thisEvent.getEventID();
         System.out.println("dota 2 " + thisEvent.toJSON().toString());
         String maxPart = "" + thisEvent.getEventMaxPart();

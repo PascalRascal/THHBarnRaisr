@@ -26,6 +26,7 @@ package stohio.barnraisr;
         import com.facebook.login.LoginResult;
         import com.facebook.AccessToken;
         import com.facebook.GraphRequest;
+        import com.facebook.Profile;
 
         import org.json.JSONArray;
         import org.json.JSONObject;
@@ -246,6 +247,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(LoginResult loginResults) {
                         System.out.println("Logged in!");
+                        Event registration = new Event("2", Profile.getCurrentProfile().getId());
+                        registration.post();
                         loggedIn = true;
                         loadData(3);
                         GraphRequest request = GraphRequest.newMeRequest(
