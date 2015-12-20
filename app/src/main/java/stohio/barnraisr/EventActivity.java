@@ -72,8 +72,7 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
 
         title.setText(thisEvent.getEventTitle());
         date.setText(thisEvent.getEventDate());
-        time.setText(thisEvent.getEventTime());
-        num.setText("5");
+        num.setText("0");
         tot.setText(maxPart);
         desc.setText(thisEvent.getEventDesc());
 
