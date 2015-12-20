@@ -76,7 +76,7 @@ public class EventCreate extends AppCompatActivity {
         np = (NumberPicker) findViewById(R.id.numberPicker1);
 
         np.setMaxValue(20);
-        np.setMinValue(0);
+        np.setMinValue(1);
         np.setWrapSelectorWheel(true);
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -98,6 +98,8 @@ public class EventCreate extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                  {
+                     Snackbar.make(view, "Event Posted!", Snackbar.LENGTH_LONG)
+                             .setAction("Action", null).show();
 
                 }
                 createEvent();

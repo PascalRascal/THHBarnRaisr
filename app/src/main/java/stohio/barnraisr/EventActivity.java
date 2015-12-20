@@ -64,7 +64,6 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
 
         title = (TextView)findViewById(R.id.textView);
         date = (TextView)findViewById(R.id.textView2);
-        time = (TextView)findViewById(R.id.textView3);
         num = (TextView)findViewById(R.id.currentNum);
         tot = (TextView)findViewById(R.id.maxNum);
         desc = (TextView)findViewById(R.id.Desc);
@@ -73,8 +72,7 @@ public class EventActivity extends FragmentActivity implements OnMapReadyCallbac
 
         title.setText(thisEvent.getEventTitle());
         date.setText(thisEvent.getEventDate());
-        time.setText(thisEvent.getEventTime());
-        num.setText("5");
+        num.setText("0");
         tot.setText(maxPart);
         desc.setText(thisEvent.getEventDesc());
 
