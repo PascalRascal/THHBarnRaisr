@@ -40,8 +40,8 @@ public class EventActivity extends AppCompatActivity {
         title = (TextView)findViewById(R.id.textView);
         date = (TextView)findViewById(R.id.textView2);
         time = (TextView)findViewById(R.id.textView3);
-        num = (TextView)findViewById(R.id.textView4);
-        tot = (TextView)findViewById(R.id.textView5);
+        num = (TextView)findViewById(R.id.currentNum);
+        tot = (TextView)findViewById(R.id.maxNum);
         desc = (TextView)findViewById(R.id.Desc);
         profile = (ImageView)findViewById(R.id.profile);
         button = (Button)findViewById(R.id.button);

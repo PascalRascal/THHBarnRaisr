@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,30 +9,28 @@
         android:id="@+id/thumbnail"
         android:src="@drawable/thumb" />
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/title"
+        android:layout_weight="0.22"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toEndOf="@+id/thumbnail"
+        android:textColor="#000000" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:id="@+id/title"
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date"
-            android:id="@+id/date"
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Location"
-            android:id="@+id/location"
-            android:textColor="#000000" />
-    </LinearLayout>
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/description"
+        android:layout_below="@+id/title"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="#000000" />
+</RelativeLayout>
