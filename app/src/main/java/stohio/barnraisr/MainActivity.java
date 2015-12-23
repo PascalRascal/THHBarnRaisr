@@ -35,7 +35,6 @@ package stohio.barnraisr;
 
 public class MainActivity extends AppCompatActivity {
     private final String debugs = "DEBUGZ";
-    List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends", "user_likes");
     private CallbackManager callbackManager;
     private boolean loggedIn = false;
     private SwipeRefreshLayout swipeContainer;
@@ -263,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 });
-
+        List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends", "user_likes");
         loginManager.logInWithReadPermissions(this, permissionNeeds);
     }
 }
