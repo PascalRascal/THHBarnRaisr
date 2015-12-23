@@ -37,6 +37,7 @@ package stohio.barnraisr;
 
 
 public class MainActivity extends AppCompatActivity {
+    private final String debugs = "DEBUGZ";
     List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends", "user_likes");
     private CallbackManager callbackManager;
     private LoginManager loginManager;
@@ -54,15 +55,7 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         setUpFacebook();
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
-                AccessToken.setCurrentAccessToken(newAccessToken);
-            }
-        };
 
-        printFB();
-        loginManager.logInWithReadPermissions(this, permissionNeeds);
 
 
         setContentView(R.layout.activity_main);
@@ -227,40 +220,32 @@ public class MainActivity extends AppCompatActivity {
 
     public void setUpFacebook()
     {
-        // First initialize the Facebook SDK
+
+        Log.d(debugs, "Setting up Facebook");
+
         FacebookSdk.sdkInitialize(this.getApplicationContext());
 
-        // create the callback manager
         callbackManager = CallbackManager.Factory.create();
-
-        // create the access token
         accessToken = AccessToken.getCurrentAccessToken();
-
-        // create the login manager
         loginManager = LoginManager.getInstance();
 
 
-
-        // create the callback for the login manager
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResults) {
-                        System.out.println("Logged in!");
-                        Event registration = new Event("2", Profile.getCurrentProfile().getId());
-                        Log.d("facebookload", Profile.getCurrentProfile().getId());
-                        registration.post();
-                        loggedIn = true;
-                        loadData(3);
+
+                        //Get some info about the profile
                         GraphRequest request = GraphRequest.newMeRequest(
                                 loginResults.getAccessToken(),
                                 new GraphRequest.GraphJSONObjectCallback() {
                                     @Override
-                                    public void onCompleted(
-                                            JSONObject object,
-                                            GraphResponse response) {
-                                        // Application code
-                                        Log.v("LoginActivity", response.toString());
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
+                                        // Profile Info is Loaded.Send Facebook info to server.  Ensure everything is logged for records
+                                        Event registration = new Event("2", Profile.getCurrentProfile().getId());
+                                        Log.d(debugs, "Logged into Facebook!  Profile ID: " + Profile.getCurrentProfile().getId());
+                                        registration.post();
+                                        loggedIn = true;
                                     }
                                 });
                         Bundle parameters = new Bundle();
@@ -268,54 +253,36 @@ public class MainActivity extends AppCompatActivity {
                         request.setParameters(parameters);
                         request.executeAsync();
 
+                        //BEGIN LOADING DATA
+                        Log.d(debugs, "Attempting to load data for the first time.");
+                        loadData(3);
                     }
 
                     @Override
                     public void onCancel() {
+                        Log.d(debugs,"Facebook Login Cancelled");
 
                         if(loggedIn == false) {
+                            Log.d(debugs,"Not Logged into Facebook, exiting Application");
                             finish();
                             System.exit(0);
                         }
-
-                        Log.e("dd", "facebook login canceled");
-
                     }
-
 
                     @Override
                     public void onError(FacebookException e) {
-
-
-                        Log.e("dd", "facebook login failed error");
-
+                        Log.e(debugs, "Failed to Log into Facebook");
+                        e.printStackTrace();
                     }
                 });
+
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
+                AccessToken.setCurrentAccessToken(newAccessToken);
+            }
+        };
+        loginManager.logInWithReadPermissions(this, permissionNeeds);
     }
-
-
-    public boolean isConnectedFacebook()
-    {
-
-        if (accessToken.getCurrentAccessToken() != null)
-        {
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-    public void printFB(){
-        if(isConnectedFacebook()) {
-            System.out.println("Check it! " + AccessToken.getCurrentAccessToken().getToken());
-        }else{
-            System.out.println("not connected! ;_;");
-        }
-    }
-
-
 }
 
