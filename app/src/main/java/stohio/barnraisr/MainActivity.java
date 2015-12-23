@@ -4,7 +4,6 @@ package stohio.barnraisr;
         import android.content.Intent;
         import android.os.Bundle;
         import android.support.design.widget.FloatingActionButton;
-        import android.support.design.widget.Snackbar;
         import android.support.v4.widget.SwipeRefreshLayout;
         import android.support.v7.app.AppCompatActivity;
         import android.support.v7.widget.Toolbar;
@@ -16,15 +15,13 @@ package stohio.barnraisr;
         import android.widget.ArrayAdapter;
         import android.widget.ListView;
 
-        import com.facebook.*;
         import com.facebook.CallbackManager;
-        import com.facebook.FacebookCallback;
         import com.facebook.FacebookCallback;
         import com.facebook.FacebookException;
         import com.facebook.FacebookSdk;
+        import com.facebook.GraphResponse;
         import com.facebook.login.LoginManager;
         import com.facebook.login.LoginResult;
-        import com.facebook.AccessToken;
         import com.facebook.GraphRequest;
         import com.facebook.Profile;
 
@@ -40,15 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private final String debugs = "DEBUGZ";
     List<String> permissionNeeds = Arrays.asList("user_photos", "email", "user_birthday", "user_friends", "user_likes");
     private CallbackManager callbackManager;
-    private LoginManager loginManager;
-    private AccessToken accessToken;
-    private AccessTokenTracker accessTokenTracker;
     private boolean loggedIn = false;
     private SwipeRefreshLayout swipeContainer;
     ListView lv = null;
     Context context;
     private ListView mDrawerList;
-    private ArrayAdapter<String> mAdapter;
     private int dataCode = 3;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void addDrawerItems() {
         String[] osArray = {"My Events", "Participating", "Completed"};
-        mAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, osArray);
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
     }
 
@@ -127,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     public void loadData(int code) {
         Event list;
         final ArrayList<Event> arrayList;
-        arrayList = new ArrayList<Event>();
+        arrayList = new ArrayList<>();
 
         Log.e("DATA", "DATA LOADED");
         list = new Event(Integer.toString(code));
@@ -149,28 +142,25 @@ public class MainActivity extends AppCompatActivity {
             JSONObject object = null;
             try {
                 object = dataArray.getJSONObject(i);
+                System.out.println(object.toString());
             } catch (org.json.JSONException e) {
                 e.printStackTrace();
             }
-            System.out.println(object.toString());
              arrayList.add(new Event(object));
         }
 
         lv = (ListView) findViewById(R.id.eventList);
         EventArrayAdapter listAdapter = new EventArrayAdapter(context,arrayList);
-        if(listAdapter != null) {
 
             Log.e("TEST", "TRYING TO LOAD ADA5tPTER");
             lv.setAdapter(listAdapter);
-        }
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, EventActivity.class);
-                 final ArrayList<Event> arrayData = arrayList;
-                    Log.d("HELP DATA", arrayData.get(position).toJSON().toString());
-                    intent.putExtra("Data", arrayData.get(position).toJSON().toString());
+                    Log.d("HELP DATA", arrayList.get(position).toJSON().toString());
+                    intent.putExtra("Data", arrayList.get(position).toJSON().toString());
                     startActivity(intent);
 
             }
@@ -220,14 +210,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void setUpFacebook()
     {
-
         Log.d(debugs, "Setting up Facebook");
 
         FacebookSdk.sdkInitialize(this.getApplicationContext());
 
         callbackManager = CallbackManager.Factory.create();
-        accessToken = AccessToken.getCurrentAccessToken();
-        loginManager = LoginManager.getInstance();
+        LoginManager loginManager = LoginManager.getInstance();
 
 
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -260,9 +248,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancel() {
-                        Log.d(debugs,"Facebook Login Cancelled");
+                        Log.d(debugs, "Facebook Login Cancelled");
 
-                        if(loggedIn == false) {
+                        if (!loggedIn) {
                             Log.d(debugs,"Not Logged into Facebook, exiting Application");
                             finish();
                             System.exit(0);
@@ -276,12 +264,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
-                AccessToken.setCurrentAccessToken(newAccessToken);
-            }
-        };
         loginManager.logInWithReadPermissions(this, permissionNeeds);
     }
 }
